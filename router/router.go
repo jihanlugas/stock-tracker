@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"stock-tracker/app/auth"
 	"stock-tracker/app/base"
+	"stock-tracker/app/dashboard"
 	"stock-tracker/app/item"
 	"stock-tracker/app/itemlog"
 	"stock-tracker/app/user"
@@ -36,12 +37,14 @@ func Init() *echo.Echo {
 	userUsecase := user.NewUsecase(baseUsecase, userRepository)
 	itemUsecase := item.NewUsecase(baseUsecase, itemRepository)
 	itemlogUsecase := itemlog.NewUsecase(baseUsecase, itemlogRepository, itemRepository)
+	dashboardUsecase := dashboard.NewUsecase(baseUsecase, itemRepository)
 
 	// Handler
 	authHandler := auth.NewHandler(authUsecase)
 	userHandler := user.NewHandler(userUsecase)
 	itemHandler := item.NewHandler(itemUsecase)
 	itemlogHandler := itemlog.NewHandler(itemlogUsecase)
+	dashboardHandler := dashboard.NewHandler(dashboardUsecase)
 
 	if config.Debug {
 		router.GET("/", func(c echo.Context) error {
@@ -55,6 +58,9 @@ func Init() *echo.Echo {
 	routerAuth.POST("/sign-out", authHandler.SignOut)
 	routerAuth.GET("/init", authHandler.Init, checkTokenMiddleware)
 	routerAuth.GET("/refresh-token", authHandler.RefreshToken, checkTokenMiddleware)
+
+	routerDashboard := router.Group("/dashboard", checkTokenMiddleware)
+	routerDashboard.GET("", dashboardHandler.Dashboard)
 
 	routerUser := router.Group("/user", checkTokenMiddleware)
 	routerUser.GET("", userHandler.Page)

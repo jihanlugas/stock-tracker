@@ -97,8 +97,7 @@ func (u usecase) RefreshToken(userLogin jwt.UserLogin) (token string, err error)
 func (u usecase) Init(userLogin jwt.UserLogin) (vUser model.UserView, err error) {
 	conn := u.baseUsecase.GetConnection()
 
-	userPreloads := []string{"Company", "Company.Properties", "Company.Properties.Propertytimeline", "Company.Properties.Units", "Usercompanies", "Usercompanies.Company", "Usercompanies.User"}
-	vUser, err = u.userRepository.GetViewById(conn, userLogin.UserID, userPreloads...)
+	vUser, err = u.userRepository.GetViewById(conn, userLogin.UserID)
 	if err != nil {
 		return vUser, err
 	}
