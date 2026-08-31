@@ -124,7 +124,7 @@ func (r repository) Page(conn *gorm.DB, req request.PageUser) (vUsers []model.Us
 	}
 
 	sortField := "create_dt"
-	sortOrder := "asc"
+	sortOrder := "desc"
 	if req.SortField != "" {
 		sortField = req.SortField
 	}

@@ -48,6 +48,7 @@ const (
 type Response struct {
 	Code    int         `json:"code"`
 	Err     string      `json:"error,omitempty"`
+	Token   string      `json:"token,omitempty"`
 	Message string      `json:"message"`
 	Status  bool        `json:"status"`
 	Payload interface{} `json:"payload,omitempty" swaggertype:"object"`
@@ -57,6 +58,16 @@ type Payload map[string]interface{}
 
 func (e *Response) Error() string {
 	return e.Message
+}
+
+func SuccessWithToken(code int, msg string, token string, payload interface{}) *Response {
+	return &Response{
+		Code:    code,
+		Token:   token,
+		Message: msg,
+		Status:  true,
+		Payload: payload,
+	}
 }
 
 func Success(code int, msg string, payload interface{}) *Response {

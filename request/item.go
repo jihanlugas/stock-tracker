@@ -5,15 +5,13 @@ import "time"
 type CreateItem struct {
 	Name  string `json:"name" form:"name" validate:"required,lte=200"`
 	Notes string `json:"notes" form:"notes" validate:""`
-	Stock int    `json:"stock" form:"stock" validate:"required,number"`
-	Sent  int    `json:"sent" form:"sent" validate:"required,number"`
+	// Stock int    `json:"stock" form:"stock" validate:"required,number"`
+	// Sent  int    `json:"sent" form:"sent" validate:"required,number"`
 }
 
 type UpdateItem struct {
 	Name  string `json:"name" form:"name" validate:"required,lte=200"`
 	Notes string `json:"notes" form:"notes" validate:""`
-	Stock int    `json:"stock" form:"stock" validate:"required,number"`
-	Sent  int    `json:"sent" form:"sent" validate:"required,number"`
 }
 
 type PageItem struct {

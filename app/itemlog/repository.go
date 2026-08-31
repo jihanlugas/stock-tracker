@@ -68,7 +68,7 @@ func (r *repository) Page(conn *gorm.DB, req request.PageItemlog) (vItemlogs []m
 	}
 
 	sortField := "create_dt"
-	sortOrder := "asc"
+	sortOrder := "desc"
 	if req.SortField != "" {
 		sortField = req.SortField
 	}

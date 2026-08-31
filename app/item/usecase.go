@@ -53,8 +53,8 @@ func (u *usecase) Create(loginUser jwt.UserLogin, req request.CreateItem) error 
 		ID:       utils.GetUniqueID(),
 		Name:     req.Name,
 		Notes:    req.Notes,
-		Stock:    req.Stock,
-		Sent:     req.Sent,
+		Stock:    0,
+		Sent:     0,
 		CreateBy: loginUser.UserID,
 		UpdateBy: loginUser.UserID,
 	}
@@ -92,8 +92,6 @@ func (u *usecase) Update(loginUser jwt.UserLogin, id string, req request.UpdateI
 
 	tItem.Name = req.Name
 	tItem.Notes = req.Notes
-	tItem.Stock = req.Stock
-	tItem.Sent = req.Sent
 	tItem.UpdateBy = loginUser.UserID
 	tItem.UpdateDt = time.Now()
 

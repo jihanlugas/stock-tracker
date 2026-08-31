@@ -50,8 +50,7 @@ func (h Handler) SignIn(c echo.Context) error {
 		return response.Error(http.StatusBadRequest, err.Error(), err, nil).SendJSON(c)
 	}
 
-	return response.Success(http.StatusOK, "Successfully signed in", response.Payload{
-		"token":     token,
+	return response.SuccessWithToken(http.StatusOK, "Successfully signed in", token, response.Payload{
 		"userLogin": userLogin,
 	}).SendJSON(c)
 }
@@ -89,9 +88,7 @@ func (h Handler) RefreshToken(c echo.Context) error {
 		return response.Error(http.StatusBadRequest, err.Error(), err, nil).SendJSON(c)
 	}
 
-	return response.Success(http.StatusOK, "Successfully refreshed token", response.Payload{
-		"token": token,
-	}).SendJSON(c)
+	return response.SuccessWithToken(http.StatusOK, "Successfully refreshed token", token, response.Payload{}).SendJSON(c)
 }
 
 // Init
