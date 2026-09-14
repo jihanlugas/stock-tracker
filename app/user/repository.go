@@ -47,7 +47,7 @@ func (r repository) GetByPhoneNumber(conn *gorm.DB, phoneNumber string, preloads
 	for _, preload := range preloads {
 		conn = conn.Preload(preload)
 	}
-	err = conn.Where("no_hp = ? ", utils.FormatPhoneTo62(phoneNumber)).First(&tUser).Error
+	err = conn.Where("phone_number = ? ", utils.FormatPhoneTo62(phoneNumber)).First(&tUser).Error
 	return tUser, err
 }
 
@@ -71,7 +71,7 @@ func (r repository) GetViewByPhoneNumber(conn *gorm.DB, phoneNumber string, prel
 	for _, preload := range preloads {
 		conn = conn.Preload(preload)
 	}
-	err = conn.Where("no_hp = ? ", phoneNumber).First(&vUser).Error
+	err = conn.Where("phone_number = ? ", phoneNumber).First(&vUser).Error
 	return vUser, err
 }
 
@@ -95,7 +95,7 @@ func (r repository) Page(conn *gorm.DB, req request.PageUser) (vUsers []model.Us
 		query = query.Where("username ILIKE ?", "%"+req.Username+"%")
 	}
 	if req.PhoneNumber != "" {
-		query = query.Where("no_hp ILIKE ?", "%"+utils.FormatPhoneTo62(req.PhoneNumber)+"%")
+		query = query.Where("phone_number ILIKE ?", "%"+utils.FormatPhoneTo62(req.PhoneNumber)+"%")
 	}
 	if req.Username != "" {
 		query = query.Where("username ILIKE ?", "%"+utils.FormatPhoneTo62(req.Username)+"%")

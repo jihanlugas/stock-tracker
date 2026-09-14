@@ -15,6 +15,7 @@ const (
 	// Error Middleware
 	ErrorMiddlewareUserNotFound = "Token Expired!"
 	ErrorMiddlewarePassVersion  = "Token Expired~"
+	ErrorMiddlewareUserNotAdmin = "Token Expired."
 
 	// Error Handler
 	ErrorHandlerFailedValidation = "error validation"

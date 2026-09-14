@@ -64,11 +64,11 @@ func Init() *echo.Echo {
 
 	routerUser := router.Group("/user", checkTokenMiddleware)
 	routerUser.GET("", userHandler.Page)
-	routerUser.POST("", userHandler.Create)
+	routerUser.POST("", userHandler.Create, checkTokenMiddlewareAdmin)
 	routerUser.POST("/change-password", userHandler.ChangePassword)
-	routerUser.PUT("/:id", userHandler.Update)
+	routerUser.PUT("/:id", userHandler.Update, checkTokenMiddlewareAdmin)
 	routerUser.GET("/:id", userHandler.GetById)
-	routerUser.DELETE("/:id", userHandler.Delete)
+	routerUser.DELETE("/:id", userHandler.Delete, checkTokenMiddlewareAdmin)
 
 	routerItem := router.Group("/item", checkTokenMiddleware)
 	routerItem.GET("", itemHandler.Page)
@@ -148,6 +148,36 @@ func checkTokenMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if user.PassVersion != userLogin.PassVersion {
 			return response.ErrorForce(http.StatusUnauthorized, response.ErrorMiddlewarePassVersion).SendJSON(c)
+		}
+
+		c.Set(constant.TokenUserContext, userLogin)
+		return next(c)
+	}
+}
+
+func checkTokenMiddlewareAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var err error
+
+		userLogin, err := jwt.ExtractClaims(c.Request().Header.Get(constant.AuthHeaderKey))
+		if err != nil {
+			return response.ErrorForce(http.StatusUnauthorized, err.Error()).SendJSON(c)
+		}
+
+		conn := db.GetPostgresConnection()
+
+		var user model.User
+		err = conn.Where("id = ? ", userLogin.UserID).First(&user).Error
+		if err != nil {
+			return response.ErrorForce(http.StatusUnauthorized, response.ErrorMiddlewareUserNotFound).SendJSON(c)
+		}
+
+		if user.PassVersion != userLogin.PassVersion {
+			return response.ErrorForce(http.StatusUnauthorized, response.ErrorMiddlewarePassVersion).SendJSON(c)
+		}
+
+		if user.Role != constant.RoleAdmin {
+			return response.ErrorForce(http.StatusUnauthorized, response.ErrorMiddlewareUserNotAdmin).SendJSON(c)
 		}
 
 		c.Set(constant.TokenUserContext, userLogin)
